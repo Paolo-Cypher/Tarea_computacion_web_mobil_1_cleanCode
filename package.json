@@ -1,0 +1,24 @@
+{
+  "name": "tarea_computacion_web_mobil_1_cleancode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "problema.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Paolo-Cypher/Tarea_computacion_web_mobil_1_cleanCode.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Paolo-Cypher/Tarea_computacion_web_mobil_1_cleanCode/issues"
+  },
+  "homepage": "https://github.com/Paolo-Cypher/Tarea_computacion_web_mobil_1_cleanCode#readme",
+  "devDependencies": {
+    "eslint": "^10.2.0"
+  }
+}
