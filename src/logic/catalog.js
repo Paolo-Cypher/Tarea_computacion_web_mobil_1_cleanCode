@@ -854,57 +854,81 @@ function mostrarPrecio(numero) {
 }
 
 // funcion para generar html de producto (mezcla logica con presentacion)
-function renderProduct(p) {
-  var html = "";
-  html += "<div class='product-card'>";
-  html += "<div class='product-img'>";
-  html += "<img src='" + p.imgs[0] + "' alt='" + p.nom + "'>";
-  if (p.stock <= 0) {
-    html += "<div class='badge-agotado'>AGOTADO</div>";
-  }
-  if (p.stock > 0 && p.stock <= 5) {
-    html += "<div class='badge-poco-stock'>ÚLTIMAS " + p.stock + " UNIDADES</div>";
-  }
-  html += "</div>";
-  html += "<div class='product-info'>";
-  html += "<h3>" + p.nom + "</h3>";
-  html += "<div class='rating'>";
-  // generar estrellas
-  var stars = "";
-  for (var i = 0; i < 5; i++) {
-    if (i < Math.floor(p.rating)) {
-      stars += "★";
-    } else if (i < p.rating) {
-      stars += "☆";
-    } else {
-      stars += "☆";
-    }
-  }
-  html += stars;
-  html += " (" + p.rating + ")";
-  html += "</div>";
-  html += "<p class='desc'>" + p.desc + "</p>";
-  html += "<div class='price'>" + fmtPrice(p.prec) + "</div>";
-  html += "<div class='category'>Categoría: " + p.cat + "</div>";
-  if (p.activo == true && p.stock > 0) {
-    html += "<button onclick='addToCart(" + p.id + ", 1)' class='btn-cart'>Agregar al carrito</button>";
-  } else {
-    html += "<button disabled class='btn-cart-disabled'>No disponible</button>";
-  }
-  html += "</div>";
-  html += "</div>";
-  return html;
-}
+// function renderProduct(p) {
+//   var html = "";
+//   html += "<div class='product-card'>";
+//   html += "<div class='product-img'>";
+//   html += "<img src='" + p.imgs[0] + "' alt='" + p.nom + "'>";
+//   if (p.stock <= 0) {
+//     html += "<div class='badge-agotado'>AGOTADO</div>";
+//   }
+//   if (p.stock > 0 && p.stock <= 5) {
+//     html += "<div class='badge-poco-stock'>ÚLTIMAS " + p.stock + " UNIDADES</div>";
+//   }
+//   html += "</div>";
+//   html += "<div class='product-info'>";
+//   html += "<h3>" + p.nom + "</h3>";
+//   html += "<div class='rating'>";
+//   // generar estrellas
+//   var stars = "";
+//   for (var i = 0; i < 5; i++) {
+//     if (i < Math.floor(p.rating)) {
+//       stars += "★";
+//     } else if (i < p.rating) {
+//       stars += "☆";
+//     } else {
+//       stars += "☆";
+//     }
+//   }
+//   html += stars;
+//   html += " (" + p.rating + ")";
+//   html += "</div>";
+//   html += "<p class='desc'>" + p.desc + "</p>";
+//   html += "<div class='price'>" + fmtPrice(p.prec) + "</div>";
+//   html += "<div class='category'>Categoría: " + p.cat + "</div>";
+//   if (p.activo == true && p.stock > 0) {
+//     html += "<button onclick='addToCart(" + p.id + ", 1)' class='btn-cart'>Agregar al carrito</button>";
+//   } else {
+//     html += "<button disabled class='btn-cart-disabled'>No disponible</button>";
+//   }
+//   html += "</div>";
+//   html += "</div>";
+//   return html;
+// }
 //Funcion nueva de renderProduct
 export function renderProduct(producto) {
     const etiquetaStock = producto.stock <=0
  ? `<div class='badge-agotado'>AGOTADO</div>`
  : producto.stock > 0 && producto.stock <= 5 
- ?: `<div class='badge-poco-stock'>ÚLTIMAS ${producto.stock} UNIDADES</div>`
+ ? `<div class='badge-poco-stock'>ÚLTIMAS ${producto.stock} UNIDADES</div>`
  : '';
+ // esto se ve feo, pero es mejor que lo que estaba antes
+ //genera las estrellas segun el rating, redondeando hacia abajo, y añadiendo estrellas vacias hasta 5
+    const estrellas = "★".repeat(Math.floor(producto.rating)) + "☆".repeat(5 - Math.floor(producto.rating));
 
-    const
-}
+    const botonHTML = (producto.activo && producto.stock > 0) //practicamente  es lo antiguo pero con operador ternario para no repetir el codigo del boton
+        ? `<button onclick='addToCart(${producto.id}, 1)' class='btn-cart'>Agregar al carrito</button>`
+        : `<button disabled class='btn-cart-disabled'>No disponible</button>`;
+        //aqui lo que se hace es generar el html del producto usando template literals (osea lo de los backticks ``), lo que hace que sea mas legible y facil de modificar, sigue teniendo la mezcla de logica y presentacion.
+        return `<div class='product-card'>
+            <div class='product-img'>
+                <img src='${producto.imgs[0]}' alt='${producto.nom}'>
+                ${etiquetaStock}
+            </div>
+            <div class='product-info'>
+                <h3>${producto.nom}</h3>
+                <div class='rating'>
+                    ${estrellas}
+                    (${producto.rating})
+                </div>
+                <p class='desc'>${producto.desc}</p>
+                <div class='price'>${fmtPrice(producto.prec)}</div>
+                <div class='category'>Categoría: ${producto.cat}</div>
+                ${botonHTML}
+            </div>
+        </div>`;
+} //OJO que estoy llamando a la funcion fmtPrice que puede que se cambie el nombre a futuro, si es asi, voy a tener que cambiarla e importarla
+
 
 
 // funcion para procesar formulario de registro (sin separacion de responsabilidades)
