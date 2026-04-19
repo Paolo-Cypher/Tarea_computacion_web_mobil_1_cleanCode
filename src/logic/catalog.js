@@ -180,15 +180,17 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
   // buscar productos
   //version modificada
 
-export const seachProducts = () =>{ //funcion flecha, ok
-    const{ query, category, minPrice = 0, maxPrice= 999999999 } = req.body; //desestructuracion de objetos, ok
+export const searchProducts = (dbProducts, dat, extraDat, moreData) =>{ //funcion flecha, ok
+    let precioMinimo = moreData ? moreData.min : 0; //aca es lo que explico el profe, es si hay info en moreData se pone eso, sino 0
+    let precioMaximo = moreData ? moreData.max : 999999999; //lo mismo aca pero con el maximo
+
     return dbProducts.filter((prod) => { //uso de filter en vez de for
         //si no esta activo, es que no tiene stock o esta malo, ver dbProdcut, ahi hay un estado "activo" en cada prodcuto
-        if(!prod.activo) return false; //return, esto era lo que hacia if (prod.activo == false) continue;
-        
-        if()
-    }
-}
+        if(prod.activo == false) return false; //return, esto era lo que hacia if (prod.activo == false) continue;
+        if(prod.prec < precioMinimo || prod.prec > precioMaximo) return false; //aca es lo mismo pero con el precio, si el precio es menor al minimo o mayor al maximo, no lo quiero
+        if(extraDat )
+    });
+};
   if (action == "buscarProductos") {
     let query = dat;
     let cat = extraDat;
@@ -468,7 +470,7 @@ export const seachProducts = () =>{ //funcion flecha, ok
   }
 
   cb({ ok: false, msg: "accion no reconocida", data: null });
-}
+} // Aca termina la funcion principal, lo demas son funciones secundarias que hacen cosas especificas, pero con malas practicas, ojo ahi
 
 // =====================================
 // mas funciones con malas practicas
