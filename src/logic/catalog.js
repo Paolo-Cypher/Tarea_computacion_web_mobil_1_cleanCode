@@ -180,7 +180,7 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
   // buscar productos
   //version modificada
   //el extraDat y el moreData son para filtros adicionales, como categoria, precio minimo, precio maximo, etc. Vere como la cambio despues, pero por ahora lo dejo asi para avanzar con el resto de la logica, ojo ahi
-export const searchProducts = (dbProducts, textoBuscado, categoria, moreData) =>{ //funcion flecha, ok
+export const buscarProductos  = (dbProducts, textoBuscado, categoria, moreData) =>{ //funcion flecha, ok
     let precioMinimo = moreData ? moreData.min : 0; //aca es lo que explico el profe, es si hay info en moreData se pone eso, sino 0
     let precioMaximo = moreData ? moreData.max : 999999999; //lo mismo aca pero con el maximo
 
@@ -188,7 +188,7 @@ export const searchProducts = (dbProducts, textoBuscado, categoria, moreData) =>
         //si no esta activo, es que no tiene stock o esta malo, ver dbProdcut, ahi hay un estado "activo" en cada prodcuto
         if(prod.activo == false) return false; //return, esto era lo que hacia if (prod.activo == false) continue;
         if(prod.prec < precioMinimo || prod.prec > precioMaximo) return false; //aca es lo mismo pero con el precio, si el precio es menor al minimo o mayor al maximo, no lo quiero
-        if(categoria && prod.cat != categoria) return false; //veo si hay categoria, y si el producto no es de esa categoria, no lo quiero
+        if(categoria && prod.cat !== categoria) return false; //veo si hay categoria, y si el producto no es de esa categoria, no lo quiero
         if(!textoBuscado) return true; //si no hay texto buscado, entonces me quedo con el producto. el texto buscado es tags, nombre o descripcion, lo que sea, si no hay texto buscado, entonces me quedo con el producto sin importar nada mas
         const busqueda = textoBuscado.toLowerCase(); //paso a minuscula el texto buscado para hacer la busqueda case insensitive    
         
@@ -201,20 +201,35 @@ export const searchProducts = (dbProducts, textoBuscado, categoria, moreData) =>
     //puede que luego se cambien las demas malas practicas como por ejemplo prod.tags y sea producto.tags o prodcuto.categoria, etc, cambiar luego
 };
 
-    // ordenar por rating
-    for (var i = 0; i < res.length - 1; i++) {
-      for (var j = 0; j < res.length - i - 1; j++) {
-        if (res[j].rating < res[j + 1].rating) {
-          var tmp = res[j];
-          res[j] = res[j + 1];
-          res[j + 1] = tmp;
-        }
-      }
-    }
-    cb({ ok: true, msg: "ok", data: res });
+// esta es la funcion original, la deje comentada para que se vea la diferencia, ojo ahi
+ 
+// ordenar por rating
+// No se si dejar esto en la funcion maestra en problema.js o meterlo en alguna funcion
+//     for (var i = 0; i < res.length - 1; i++) {
+//       for (var j = 0; j < res.length - i - 1; j++) {
+//         if (res[j].rating < res[j + 1].rating) {
+//           var tmp = res[j];
+//           res[j] = res[j + 1];
+//           res[j + 1] = tmp;
+//         }
+//       }
+//     }
+//     cb({ ok: true, msg: "ok", data: res });
+//     return;
+//   }
+///-------------LLEVARLO AL PROBLEMA.JS---------------///
+// ordenar por rating
+// lo de arriba estoy viendo que puedo hacer esto, pero tengo que dejarlo en el problema.js
+if(action == "buscarProductos"){
+    let resultado = buscarProductos(dbProducts, dat, extraDat, moreData);
+    //esto es lo que hace el cambio y no el buble sort, es decir, el sort es una funcion de los arrays que hace exactamente lo mismo que el bubble pero de forma mas eficiente, entonces lo uso para ordenar por rating.
+    resultado.sort((a, b) => b.rating - a.rating); //ordenar por rating de mayor a menor
+    const htmlResultadoFinal = resultado.map(producto => renderProduct(producto)).join(''); //renderizar cada producto a html y unirlos en un string
+    //voy a ver si quedo bien luego, porque primera vez que ocupo join
+    cb({ ok: true, msg: "ok", data: htmlResultadoFinal});//practicamente es lo mismo de antes pero le mando el html ya renderizado
     return;
-  }
-
+}
+///-------------LLEVARLO AL PROBLEMA.JS---------------///
   // agregar al carrito
   if (action == "addCart") {
     var prodId = dat;
