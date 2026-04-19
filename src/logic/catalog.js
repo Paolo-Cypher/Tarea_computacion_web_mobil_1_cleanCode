@@ -179,8 +179,8 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
 
   // buscar productos
   //version modificada
-
-export const searchProducts = (dbProducts, dat, extraDat, moreData) =>{ //funcion flecha, ok
+  //el extraDat y el moreData son para filtros adicionales, como categoria, precio minimo, precio maximo, etc. Terrible mala practica, vere como la cambio despues, pero por ahora lo dejo asi para avanzar con el resto de la logica, ojo ahi
+export const searchProducts = (dbProducts, textoBuscado, categoria, moreData) =>{ //funcion flecha, ok
     let precioMinimo = moreData ? moreData.min : 0; //aca es lo que explico el profe, es si hay info en moreData se pone eso, sino 0
     let precioMaximo = moreData ? moreData.max : 999999999; //lo mismo aca pero con el maximo
 
@@ -188,9 +188,20 @@ export const searchProducts = (dbProducts, dat, extraDat, moreData) =>{ //funcio
         //si no esta activo, es que no tiene stock o esta malo, ver dbProdcut, ahi hay un estado "activo" en cada prodcuto
         if(prod.activo == false) return false; //return, esto era lo que hacia if (prod.activo == false) continue;
         if(prod.prec < precioMinimo || prod.prec > precioMaximo) return false; //aca es lo mismo pero con el precio, si el precio es menor al minimo o mayor al maximo, no lo quiero
-        if(extraDat )
+        if(categoria && prod.cat != categoria) return false; //veo si hay categoria, y si el producto no es de esa categoria, no lo quiero
+        if(!textoBuscado) return true; //si no hay texto buscado, entonces me quedo con el producto. el texto buscado es tags, nombre o descripcion, lo que sea, si no hay texto buscado, entonces me quedo con el producto sin importar nada mas
+        const busqueda = textoBuscado.toLowerCase(); //paso a minuscula el texto buscado para hacer la busqueda case insensitive    
+        
+        const nombreMatch = prod.nom.toLowerCase().includes(busqueda); //veo si el nombre del producto incluye el texto buscado
+        const descripcionMatch = prod.desc.toLowerCase().includes(busqueda); //veo si la descripcion del producto incluye el texto buscado
+        const tagsMatch = prod.tags.some(tag => tag.toLowerCase().includes(busqueda)); //veo si alguna de las tags del producto incluye el texto buscado
+    
+        return nombreMatch || descripcionMatch || tagsMatch; //si alguna de las tres cosas coincide, entonces me quedo con el producto
     });
+    //puede que luego se cambien las demas malas practicas como por ejemplo prod.tags y sea producto.tags o prodcuto.categoria, etc, cambiar luego
 };
+
+
   if (action == "buscarProductos") {
     let query = dat;
     let cat = extraDat;
