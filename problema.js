@@ -5,6 +5,10 @@
 //este es un test benja
 //este es un test Paolo
 //este es un test Bastián
+//Ejemplo de como hacer pull request
+
+import { buscarProductos, renderProduct } from './src/logic/catalog.js'; //Tienen que hacer esto con sus funciones tambien
+
 var x = [];
 var x2 = [];
 var x3 = [];
@@ -176,57 +180,70 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
     }
   }
 
-  // buscar productos
-  if (action == "buscarProductos") {
-    var query = dat;
-    var cat = extraDat;
-    var minP = moreData ? moreData.min : 0;
-    var maxP = moreData ? moreData.max : 999999999;
-    var res = [];
-    for (var i = 0; i < dbProducts.length; i++) {
-      var prod = dbProducts[i];
-      var match = false;
-      if (prod.activo == false) continue;
-      if (query && query != "" && query != null && query != undefined) {
-        if (prod.nom.toLowerCase().indexOf(query.toLowerCase()) != -1) {
-          match = true;
-        }
-        if (prod.desc.toLowerCase().indexOf(query.toLowerCase()) != -1) {
-          match = true;
-        }
-        for (var j = 0; j < prod.tags.length; j++) {
-          if (prod.tags[j].toLowerCase().indexOf(query.toLowerCase()) != -1) {
-            match = true;
-          }
-        }
-      } else {
-        match = true;
-      }
-      if (cat && cat != "" && cat != null && cat != undefined) {
-        if (prod.cat != cat) {
-          match = false;
-        }
-      }
-      if (prod.prec < minP || prod.prec > maxP) {
-        match = false;
-      }
-      if (match == true) {
-        res.push(prod);
-      }
-    }
-    // ordenar por rating
-    for (var i = 0; i < res.length - 1; i++) {
-      for (var j = 0; j < res.length - i - 1; j++) {
-        if (res[j].rating < res[j + 1].rating) {
-          var tmp = res[j];
-          res[j] = res[j + 1];
-          res[j + 1] = tmp;
-        }
-      }
-    }
-    cb({ ok: true, msg: "ok", data: res });
+  // // buscar productos
+  // if (action == "buscarProductos") {
+  //   var query = dat;
+  //   var cat = extraDat;
+  //   var minP = moreData ? moreData.min : 0;
+  //   var maxP = moreData ? moreData.max : 999999999;
+  //   var res = [];
+  //   for (var i = 0; i < dbProducts.length; i++) {
+  //     var prod = dbProducts[i];
+  //     var match = false;
+  //     if (prod.activo == false) continue;
+  //     if (query && query != "" && query != null && query != undefined) {
+  //       if (prod.nom.toLowerCase().indexOf(query.toLowerCase()) != -1) {
+  //         match = true;
+  //       }
+  //       if (prod.desc.toLowerCase().indexOf(query.toLowerCase()) != -1) {
+  //         match = true;
+  //       }
+  //       for (var j = 0; j < prod.tags.length; j++) {
+  //         if (prod.tags[j].toLowerCase().indexOf(query.toLowerCase()) != -1) {
+  //           match = true;
+  //         }
+  //       }
+  //     } else {
+  //       match = true;
+  //     }
+  //     if (cat && cat != "" && cat != null && cat != undefined) {
+  //       if (prod.cat != cat) {
+  //         match = false;
+  //       }
+  //     }
+  //     if (prod.prec < minP || prod.prec > maxP) {
+  //       match = false;
+  //     }
+  //     if (match == true) {
+  //       res.push(prod);
+  //     }
+  //   }
+  // }
+  //   // ordenar por rating
+  //   for (var i = 0; i < res.length - 1; i++) {
+  //     for (var j = 0; j < res.length - i - 1; j++) {
+  //       if (res[j].rating < res[j + 1].rating) {
+  //         var tmp = res[j];
+  //         res[j] = res[j + 1];
+  //         res[j + 1] = tmp;
+  //       }
+  //     }
+  //   }
+  //   cb({ ok: true, msg: "ok", data: res });
+  //   return;
+  // }
+
+    // ordenar por rating actualizado
+if(action == "buscarProductos"){
+    let resultado = buscarProductos(dbProducts, dat, extraDat, moreData);
+    //esto es lo que hace el cambio y no el buble sort, es decir, el sort es una funcion de los arrays que hace exactamente lo mismo que el bubble pero de forma mas eficiente.
+    resultado.sort((a, b) => b.rating - a.rating); //ordenar por rating de mayor a menor
+    const htmlResultadoFinal = resultado.map(producto => renderProduct(producto)).join(''); //renderizar cada producto a html y unirlos en un string
+    //voy a ver si quedo bien luego, porque primera vez que ocupo join
+    cb({ ok: true, msg: "ok", data: htmlResultadoFinal});//practicamente es lo mismo de antes pero le mando el html ya renderizado
     return;
-  }
+}
+
 
   // agregar al carrito
   if (action == "addCart") {
