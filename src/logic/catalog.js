@@ -179,6 +179,16 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
 
   // buscar productos
   //version modificada
+
+export const seachProducts = () =>{ //funcion flecha, ok
+    const{ query, category, minPrice = 0, maxPrice= 999999999 } = req.body; //desestructuracion de objetos, ok
+    return dbProducts.filter((prod) => { //uso de filter en vez de for
+        //si no esta activo, es que no tiene stock o esta malo, ver dbProdcut, ahi hay un estado "activo" en cada prodcuto
+        if(!prod.activo) return false; //return, esto era lo que hacia if (prod.activo == false) continue;
+        
+        if()
+    }
+}
   if (action == "buscarProductos") {
     let query = dat;
     let cat = extraDat;
