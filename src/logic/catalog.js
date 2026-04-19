@@ -895,6 +895,17 @@ function renderProduct(p) {
   html += "</div>";
   return html;
 }
+//Funcion nueva de renderProduct
+export function renderProduct(producto) {
+    const etiquetaStock = producto.stock <=0
+ ? `<div class='badge-agotado'>AGOTADO</div>`
+ : producto.stock > 0 && producto.stock <= 5 
+ ?: `<div class='badge-poco-stock'>ÚLTIMAS ${producto.stock} UNIDADES</div>`
+ : '';
+
+    const
+}
+
 
 // funcion para procesar formulario de registro (sin separacion de responsabilidades)
 function processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirect(formData) {

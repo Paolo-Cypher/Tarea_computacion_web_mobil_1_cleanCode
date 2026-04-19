@@ -6,6 +6,9 @@
 //este es un test Paolo
 //este es un test Bastián
 //Ejemplo de como hacer pull request
+
+import { buscarProductos, renderProduct } from './src/logic/catalog.js';
+
 var x = [];
 var x2 = [];
 var x3 = [];
