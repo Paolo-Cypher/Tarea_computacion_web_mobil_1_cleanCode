@@ -179,7 +179,7 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
 
   // buscar productos
   //version modificada
-  //el extraDat y el moreData son para filtros adicionales, como categoria, precio minimo, precio maximo, etc. Terrible mala practica, vere como la cambio despues, pero por ahora lo dejo asi para avanzar con el resto de la logica, ojo ahi
+  //el extraDat y el moreData son para filtros adicionales, como categoria, precio minimo, precio maximo, etc. Vere como la cambio despues, pero por ahora lo dejo asi para avanzar con el resto de la logica, ojo ahi
 export const searchProducts = (dbProducts, textoBuscado, categoria, moreData) =>{ //funcion flecha, ok
     let precioMinimo = moreData ? moreData.min : 0; //aca es lo que explico el profe, es si hay info en moreData se pone eso, sino 0
     let precioMaximo = moreData ? moreData.max : 999999999; //lo mismo aca pero con el maximo
@@ -201,44 +201,6 @@ export const searchProducts = (dbProducts, textoBuscado, categoria, moreData) =>
     //puede que luego se cambien las demas malas practicas como por ejemplo prod.tags y sea producto.tags o prodcuto.categoria, etc, cambiar luego
 };
 
-
-  if (action == "buscarProductos") {
-    let query = dat;
-    let cat = extraDat;
-    let minP = moreData ? moreData.min : 0;
-    let maxP = moreData ? moreData.max : 999999999;
-    let res = [];
-    for (let i = 0; i < dbProducts.length; i++) {
-      let prod = dbProducts[i];
-      let match = false;
-      if (prod.activo == false) continue;
-      if (query && query != "" && query != null && query != undefined) {
-        if (prod.nom.toLowerCase().indexOf(query.toLowerCase()) != -1) {
-          match = true;
-        }
-        if (prod.desc.toLowerCase().indexOf(query.toLowerCase()) != -1) {
-          match = true;
-        }
-        for (var j = 0; j < prod.tags.length; j++) {
-          if (prod.tags[j].toLowerCase().indexOf(query.toLowerCase()) != -1) {
-            match = true;
-          }
-        }
-      } else {
-        match = true;
-      }
-      if (cat && cat != "" && cat != null && cat != undefined) {
-        if (prod.cat != cat) {
-          match = false;
-        }
-      }
-      if (prod.prec < minP || prod.prec > maxP) {
-        match = false;
-      }
-      if (match == true) {
-        res.push(prod);
-      }
-    }
     // ordenar por rating
     for (var i = 0; i < res.length - 1; i++) {
       for (var j = 0; j < res.length - i - 1; j++) {
