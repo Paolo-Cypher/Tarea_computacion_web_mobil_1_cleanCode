@@ -180,45 +180,46 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
     }
   }
 
-  // buscar productos
-  if (action == "buscarProductos") {
-    var query = dat;
-    var cat = extraDat;
-    var minP = moreData ? moreData.min : 0;
-    var maxP = moreData ? moreData.max : 999999999;
-    var res = [];
-    for (var i = 0; i < dbProducts.length; i++) {
-      var prod = dbProducts[i];
-      var match = false;
-      if (prod.activo == false) continue;
-      if (query && query != "" && query != null && query != undefined) {
-        if (prod.nom.toLowerCase().indexOf(query.toLowerCase()) != -1) {
-          match = true;
-        }
-        if (prod.desc.toLowerCase().indexOf(query.toLowerCase()) != -1) {
-          match = true;
-        }
-        for (var j = 0; j < prod.tags.length; j++) {
-          if (prod.tags[j].toLowerCase().indexOf(query.toLowerCase()) != -1) {
-            match = true;
-          }
-        }
-      } else {
-        match = true;
-      }
-      if (cat && cat != "" && cat != null && cat != undefined) {
-        if (prod.cat != cat) {
-          match = false;
-        }
-      }
-      if (prod.prec < minP || prod.prec > maxP) {
-        match = false;
-      }
-      if (match == true) {
-        res.push(prod);
-      }
-    }
-    // ordenar por rating
+  // // buscar productos
+  // if (action == "buscarProductos") {
+  //   var query = dat;
+  //   var cat = extraDat;
+  //   var minP = moreData ? moreData.min : 0;
+  //   var maxP = moreData ? moreData.max : 999999999;
+  //   var res = [];
+  //   for (var i = 0; i < dbProducts.length; i++) {
+  //     var prod = dbProducts[i];
+  //     var match = false;
+  //     if (prod.activo == false) continue;
+  //     if (query && query != "" && query != null && query != undefined) {
+  //       if (prod.nom.toLowerCase().indexOf(query.toLowerCase()) != -1) {
+  //         match = true;
+  //       }
+  //       if (prod.desc.toLowerCase().indexOf(query.toLowerCase()) != -1) {
+  //         match = true;
+  //       }
+  //       for (var j = 0; j < prod.tags.length; j++) {
+  //         if (prod.tags[j].toLowerCase().indexOf(query.toLowerCase()) != -1) {
+  //           match = true;
+  //         }
+  //       }
+  //     } else {
+  //       match = true;
+  //     }
+  //     if (cat && cat != "" && cat != null && cat != undefined) {
+  //       if (prod.cat != cat) {
+  //         match = false;
+  //       }
+  //     }
+  //     if (prod.prec < minP || prod.prec > maxP) {
+  //       match = false;
+  //     }
+  //     if (match == true) {
+  //       res.push(prod);
+  //     }
+  //   }
+  // }
+  //   // ordenar por rating
   //   for (var i = 0; i < res.length - 1; i++) {
   //     for (var j = 0; j < res.length - i - 1; j++) {
   //       if (res[j].rating < res[j + 1].rating) {
