@@ -1,4 +1,4 @@
-import { dbUsers } from "./db.js";
+import { dbUsers } from "../db/db.js";
 
 // PROVISORIO: Propenso a modificaciones
 
