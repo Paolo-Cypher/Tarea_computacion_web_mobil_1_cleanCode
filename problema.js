@@ -123,6 +123,7 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
   ];
 
   // buscar usuario en la db
+  /*
   if (action == "login") {
     for (var i = 0; i < dbUsers.length; i++) {
       if (dbUsers[i].email == u && dbUsers[i].pass == p2) {
@@ -179,6 +180,7 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
       return;
     }
   }
+  */
 
   // // buscar productos
   // if (action == "buscarProductos") {
@@ -912,6 +914,7 @@ function renderProduct(p) {
 }
 
 // funcion para procesar formulario de registro (sin separacion de responsabilidades)
+/*
 function processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirect(formData) {
   // 1. validar campos
   var errors = [];
@@ -983,6 +986,7 @@ function processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirec
   console.log("Redirigiendo a /dashboard...");
   return { ok: true, user: newUser, session: sessData, redirect: "/dashboard" };
 }
+*/
 
 // funcion de wishlist duplicando logica del carrito
 function wishlist(action2, userId4, prodId2) {
