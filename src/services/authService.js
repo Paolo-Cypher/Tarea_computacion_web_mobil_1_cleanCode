@@ -3,8 +3,8 @@ import { dbUsers } from "../db/db.js";
 const MAX_LOGIN_ATTEMPTS = 3;
 const MIN_PASSWORD_LENGTH = 8;
 const MIN_NAME_LENGTH = 3;
-const MIN_PHONE_LENGTH = 9;
-const MIN_RUT_LENGTH = 8;
+const MIN_PHONE_LENGTH = 9; // Fromato 912345678
+const MIN_RUT_LENGTH = 10; // Formato 12345678-k
 
 const USER_LEVELS = {
   BRONCE: { name: "bronce", minPoints: 0 },
@@ -39,7 +39,7 @@ const registerFailedAttempt = (user) => {
   if (user.intentos >= MAX_LOGIN_ATTEMPTS) user.bloqueado = true;
 };
 
-const validateForm = (formData) => {
+const validateRegistrationData = (formData) => {
   const errors = [];
 
   if (!formData.nombre || formData.nombre.length < MIN_NAME_LENGTH)
@@ -121,7 +121,7 @@ const login = (email, password, callback) => {
 const register = (formData, callback) => {
   const errors = validateRegistrationData(formData);
   if (errors.length > 0) {
-    callback({ ok: false, errors, data: null });
+    callback({ ok: false, errors: errors, data: null });
     return;
   }
 
@@ -134,7 +134,7 @@ const register = (formData, callback) => {
     return;
   }
 
-  const newUser = buildNewUser(formData);
+  const newUser = saveUser(formData);
   dbUsers.push(newUser);
   sendEmail(formData.email, formData.name);
 
