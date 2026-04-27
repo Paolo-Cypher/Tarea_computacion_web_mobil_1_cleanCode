@@ -1,33 +1,26 @@
 //unifique las 2 funciones de notificaciones en una sola.
+//mejorada sin tanta repeticion de estructura y con usi de const.
 export function sendNotif(tipo, userId, msg, data) {
-  var n = {};
-  var sent = false;
-  if (tipo == "email") {
-    // simular envio email
-    console.log("Enviando email a usuario " + userId + ": " + msg);
-    n = { tipo: "email", userId: userId, msg: msg, data: data, sentAt: new Date(), ok: true };
-    sent = true;
+  let tiposValidos = ["email", "sms", "push", "inapp"];
+  let esValido = tiposValidos.includes(tipo);
+
+  if (esValido) {
+    const mensajesLog = {
+      email: `Enviando email a usuario ${userId}: ${msg}`,
+      sms: `Enviando SMS a usuario ${userId}: ${msg}`,
+      push: `Enviando push a usuario ${userId}: ${msg}`,
+      inapp: `Guardando notif inapp para usuario ${userId}: ${msg}`,
+    };
+    console.log(mensajesLog[tipo]);
   }
-  if (tipo == "sms") {
-    // simular envio sms
-    console.log("Enviando SMS a usuario " + userId + ": " + msg);
-    n = { tipo: "sms", userId: userId, msg: msg, data: data, sentAt: new Date(), ok: true };
-    sent = true;
-  }
-  if (tipo == "push") {
-    // simular push notification
-    console.log("Enviando push a usuario " + userId + ": " + msg);
-    n = { tipo: "push", userId: userId, msg: msg, data: data, sentAt: new Date(), ok: true };
-    sent = true;
-  }
-  if (tipo == "inapp") {
-    // simular notificacion interna
-    console.log("Guardando notif inapp para usuario " + userId + ": " + msg);
-    n = { tipo: "inapp", userId: userId, msg: msg, data: data, sentAt: new Date(), ok: true };
-    sent = true;
-  }
-  if (sent == false) {
-    n = { tipo: tipo, userId: userId, msg: msg, data: data, sentAt: new Date(), ok: false, err: "tipo no reconocido" };
-  }
-  return n;
+
+  return {
+    tipo: tipo,
+    userId: userId,
+    msg: msg,
+    data: data,
+    sentAt: new Date(),
+    ok: esValido,
+    ...(esValido ? {} : { err: "tipo no reconocido" }),
+  };
 }
