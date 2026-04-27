@@ -7,7 +7,8 @@
 //este es un test Bastián
 //Ejemplo de como hacer pull request
 
-import { buscarProductos, renderProduct } from './src/logic/catalog.js'; //Tienen que hacer esto con sus funciones tambien
+import { buscarProductos, renderProduct } from './src/logic/catalog.js';
+import { calc, makeReport, calcShipping } from './src/utils/analytics.js';
 
 var x = [];
 var x2 = [];
@@ -538,171 +539,6 @@ function v(cosa, tipo) {
   return r;
 }
 
-// calcular precio con todo
-function calc(p, d, d2, d3, iva, envio, cuotas) {
-  // p = precio base
-  // d = descuento nivel
-  // d2 = descuento cupon
-  // d3 = descuento especial
-  // iva = si aplica iva
-  // envio = costo envio
-  // cuotas = numero cuotas
-  var r = 0;
-  var r2 = 0;
-  var r3 = 0;
-  var r4 = 0;
-  var r5 = 0;
-  var r6 = 0;
-  var r7 = 0;
-  r = p;
-  if (d > 0) {
-    r2 = r * (d / 100);
-    r = r - r2;
-  }
-  if (d2 > 0) {
-    r3 = r * (d2 / 100);
-    r = r - r3;
-  }
-  if (d3 > 0) {
-    r4 = r * (d3 / 100);
-    r = r - r4;
-  }
-  if (iva == true) {
-    r5 = r * 0.19;
-    r = r + r5;
-  }
-  if (envio > 0) {
-    r = r + envio;
-  }
-  r6 = r;
-  if (cuotas > 1) {
-    // agregar interes segun cuotas
-    if (cuotas == 2) {
-      r7 = r * 0.02;
-      r = r + r7;
-    }
-    if (cuotas == 3) {
-      r7 = r * 0.04;
-      r = r + r7;
-    }
-    if (cuotas == 6) {
-      r7 = r * 0.08;
-      r = r + r7;
-    }
-    if (cuotas == 12) {
-      r7 = r * 0.15;
-      r = r + r7;
-    }
-    if (cuotas == 24) {
-      r7 = r * 0.28;
-      r = r + r7;
-    }
-    if (cuotas == 36) {
-      r7 = r * 0.45;
-      r = r + r7;
-    }
-  }
-  return {
-    base: p,
-    dscto1: r2,
-    dscto2: r3,
-    dscto3: r4,
-    subtotal: r6,
-    iva: r5,
-    envio: envio,
-    totalCuota: cuotas > 1 ? r / cuotas : r,
-    total: r
-  };
-}
-
-// funcion de reporte
-function makeReport(type, from, to, data, data2, data3, opts) {
-  var report = "";
-  var lines = [];
-  var totalGeneral = 0;
-  var totalGeneral2 = 0;
-  var totalGeneral3 = 0;
-  var count = 0;
-  var count2 = 0;
-  var count3 = 0;
-  var avg = 0;
-  var avg2 = 0;
-  var avg3 = 0;
-  var max = 0;
-  var max2 = 0;
-  var max3 = 0;
-  var min = 999999999;
-  var min2 = 999999999;
-  var min3 = 999999999;
-  
-  if (type == "ventas") {
-    report += "=== REPORTE DE VENTAS ===\n";
-    report += "Desde: " + from + "\n";
-    report += "Hasta: " + to + "\n";
-    report += "========================\n";
-    for (var i = 0; i < data.length; i++) {
-      var venta = data[i];
-      totalGeneral = totalGeneral + venta.total;
-      count++;
-      if (venta.total > max) max = venta.total;
-      if (venta.total < min) min = venta.total;
-      lines.push("Orden: " + venta.id + " | Total: $" + venta.total + " | Estado: " + venta.estado);
-    }
-    avg = count > 0 ? totalGeneral / count : 0;
-    report += lines.join("\n");
-    report += "\n------------------------\n";
-    report += "Total ordenes: " + count + "\n";
-    report += "Total ingresos: $" + totalGeneral + "\n";
-    report += "Promedio por orden: $" + avg + "\n";
-    report += "Venta maxima: $" + max + "\n";
-    report += "Venta minima: $" + min + "\n";
-  }
-  if (type == "productos") {
-    report += "=== REPORTE DE PRODUCTOS ===\n";
-    report += "Desde: " + from + "\n";
-    report += "Hasta: " + to + "\n";
-    report += "============================\n";
-    for (var i = 0; i < data.length; i++) {
-      var prod2 = data[i];
-      totalGeneral2 = totalGeneral2 + prod2.prec;
-      count2++;
-      if (prod2.prec > max2) max2 = prod2.prec;
-      if (prod2.prec < min2) min2 = prod2.prec;
-      lines.push("Producto: " + prod2.nom + " | Precio: $" + prod2.prec + " | Stock: " + prod2.stock + " | Rating: " + prod2.rating);
-    }
-    avg2 = count2 > 0 ? totalGeneral2 / count2 : 0;
-    report += lines.join("\n");
-    report += "\n----------------------------\n";
-    report += "Total productos: " + count2 + "\n";
-    report += "Precio promedio: $" + avg2 + "\n";
-    report += "Precio maximo: $" + max2 + "\n";
-    report += "Precio minimo: $" + min2 + "\n";
-  }
-  if (type == "usuarios") {
-    report += "=== REPORTE DE USUARIOS ===\n";
-    report += "Desde: " + from + "\n";
-    report += "Hasta: " + to + "\n";
-    report += "===========================\n";
-    for (var i = 0; i < data.length; i++) {
-      var usr2 = data[i];
-      totalGeneral3 = totalGeneral3 + usr2.puntos;
-      count3++;
-      if (usr2.puntos > max3) max3 = usr2.puntos;
-      if (usr2.puntos < min3) min3 = usr2.puntos;
-      lines.push("Usuario: " + usr2.nombre + " | Email: " + usr2.email + " | Tipo: " + usr2.tipo + " | Puntos: " + usr2.puntos + " | Activo: " + usr2.activo);
-    }
-    avg3 = count3 > 0 ? totalGeneral3 / count3 : 0;
-    report += lines.join("\n");
-    report += "\n---------------------------\n";
-    report += "Total usuarios: " + count3 + "\n";
-    report += "Puntos promedio: " + avg3 + "\n";
-    report += "Max puntos: " + max3 + "\n";
-    report += "Min puntos: " + min3 + "\n";
-  }
-  return report;
-}
-
-// funcion para notificaciones (completamente duplicada en logica)
 function sendNotif(tipo, userId, msg, data) {
   var n = {};
   var sent = false;
@@ -868,49 +704,6 @@ function formatearPrecio(num) {
 }
 function mostrarPrecio(numero) {
   return "$" + numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
-
-// funcion para generar html de producto (mezcla logica con presentacion)
-function renderProduct(p) {
-  var html = "";
-  html += "<div class='product-card'>";
-  html += "<div class='product-img'>";
-  html += "<img src='" + p.imgs[0] + "' alt='" + p.nom + "'>";
-  if (p.stock <= 0) {
-    html += "<div class='badge-agotado'>AGOTADO</div>";
-  }
-  if (p.stock > 0 && p.stock <= 5) {
-    html += "<div class='badge-poco-stock'>ÚLTIMAS " + p.stock + " UNIDADES</div>";
-  }
-  html += "</div>";
-  html += "<div class='product-info'>";
-  html += "<h3>" + p.nom + "</h3>";
-  html += "<div class='rating'>";
-  // generar estrellas
-  var stars = "";
-  for (var i = 0; i < 5; i++) {
-    if (i < Math.floor(p.rating)) {
-      stars += "★";
-    } else if (i < p.rating) {
-      stars += "☆";
-    } else {
-      stars += "☆";
-    }
-  }
-  html += stars;
-  html += " (" + p.rating + ")";
-  html += "</div>";
-  html += "<p class='desc'>" + p.desc + "</p>";
-  html += "<div class='price'>" + fmtPrice(p.prec) + "</div>";
-  html += "<div class='category'>Categoría: " + p.cat + "</div>";
-  if (p.activo == true && p.stock > 0) {
-    html += "<button onclick='addToCart(" + p.id + ", 1)' class='btn-cart'>Agregar al carrito</button>";
-  } else {
-    html += "<button disabled class='btn-cart-disabled'>No disponible</button>";
-  }
-  html += "</div>";
-  html += "</div>";
-  return html;
 }
 
 // funcion para procesar formulario de registro (sin separacion de responsabilidades)
@@ -1124,46 +917,6 @@ function reviews(action3, prodId3, userId5, rating2, comment, data4) {
   return { ok: false, msg: "accion invalida" };
 }
 
-// funcion de envio con logica embebida
-function calcShipping(destCity, weight, dimensions, prodType, isUrgent, isFree, hasInsurance) {
-  // tasas hardcodeadas
-  var baseCost = 0;
-  var cityMult = 1;
-  var weightCost = 0;
-  var insuranceCost = 0;
-  var urgentCost = 0;
-  
-  if (destCity == "Santiago") cityMult = 1;
-  if (destCity == "Valparaiso") cityMult = 1.2;
-  if (destCity == "Concepcion") cityMult = 1.4;
-  if (destCity == "La Serena") cityMult = 1.6;
-  if (destCity == "Antofagasta") cityMult = 1.8;
-  if (destCity == "Iquique") cityMult = 2.0;
-  if (destCity == "Punta Arenas") cityMult = 2.5;
-  
-  // costo por peso
-  if (weight <= 1) weightCost = 2000;
-  if (weight > 1 && weight <= 5) weightCost = 3500;
-  if (weight > 5 && weight <= 10) weightCost = 5000;
-  if (weight > 10 && weight <= 20) weightCost = 8000;
-  if (weight > 20) weightCost = 12000;
-  
-  // tipo de producto
-  if (prodType == "fragil") weightCost = weightCost * 1.5;
-  if (prodType == "electronico") weightCost = weightCost * 1.3;
-  if (prodType == "normal") weightCost = weightCost * 1;
-  
-  baseCost = weightCost * cityMult;
-  
-  if (isUrgent == true) urgentCost = baseCost * 0.5;
-  if (hasInsurance == true) insuranceCost = baseCost * 0.1;
-  if (isFree == true) return { costo: 0, desglose: "Envio gratis" };
-  
-  var total = baseCost + urgentCost + insuranceCost;
-  return { costo: total, base: baseCost, urgente: urgentCost, seguro: insuranceCost };
-}
-
-// funcion inventario con numeros magicos
 function checkInventory(prodId4) {
   var prods2 = [
     { id: 101, stock: 5 }, { id: 102, stock: 50 }, { id: 103, stock: 20 },
