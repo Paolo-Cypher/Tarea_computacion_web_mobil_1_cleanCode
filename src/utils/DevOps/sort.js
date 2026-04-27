@@ -19,11 +19,11 @@ export function sort(arr, field, order = "asc") {
     const A_es_Mayor = valorA > valorB;
 
     if (TieneOrdenAscendente) { // esto es para saber el posicionamiento.
-      // Si es mayor A, retorna 1.
-      // en otro caso, retorna -1.
-      return A_es_Mayor ? 1 : -1;
-    } else {
+      // Si es mayor A, retorna -1.
+      // en otro caso, retorna 1.
       return A_es_Mayor ? -1 : 1;
+    } else {
+      return A_es_Mayor ? 1 : -1;
     }
   });
 }

@@ -9,7 +9,7 @@ export function formatoPrecio(amount){
   maximumFractionDigits: 2,
 };
 
-const montoFormateado = numero.toLocaleString("es-CL", opciones);
+const montoFormateado = amount.toLocaleString("es-CL", opciones);
 
 return `$${montoFormateado}`;
 }
