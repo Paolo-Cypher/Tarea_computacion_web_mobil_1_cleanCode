@@ -4,7 +4,7 @@
   "description": "",
   "main": "problema.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/Paolo-Cypher/Tarea_computacion_web_mobil_1_cleanCode#readme",
   "devDependencies": {
-    "eslint": "^10.2.0"
+    "chai": "^6.2.2",
+    "eslint": "^10.2.0",
+    "mocha": "^11.7.5"
   }
 }
