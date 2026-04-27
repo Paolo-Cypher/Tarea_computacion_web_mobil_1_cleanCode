@@ -1,5 +1,5 @@
 //Funcion de fechas, modificada.
-function FormatoFecha(date, format = "DD/MM/YYYY HH:MM:SS") {
+export function FormatoFecha(date, format = "DD/MM/YYYY HH:MM:SS") {
   if (typeof date === "string") {
     date = new Date(date);
   }

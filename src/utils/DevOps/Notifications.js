@@ -1,5 +1,5 @@
 //unifique las 2 funciones de notificaciones en una sola.
-function sendNotif(tipo, userId, msg, data) {
+export function sendNotif(tipo, userId, msg, data) {
   var n = {};
   var sent = false;
   if (tipo == "email") {
