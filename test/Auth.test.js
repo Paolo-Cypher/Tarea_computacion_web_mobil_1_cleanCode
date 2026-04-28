@@ -45,7 +45,7 @@ describe("Funcion de Register", () => {
   // Formulario de registro correcto
   const formData = {
     nombre: "Mr Prueba",
-    email: "mr.prueba@test.com",
+    email: "mrprueba@test.com",
     pass: "mrprueba1234",
     passConfirm: "mrprueba1234",
     rut: "11222333-k", // Formato 12345678-k

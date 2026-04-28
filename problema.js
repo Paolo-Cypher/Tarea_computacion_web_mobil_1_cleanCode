@@ -1105,7 +1105,7 @@ export {
   makeReport,
   sendNotif,
   notifyUser,
-  cupon,
+  //cupon,
   search,
   fmtPrice,
   formatearPrecio,
