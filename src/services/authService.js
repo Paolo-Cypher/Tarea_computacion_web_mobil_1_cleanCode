@@ -1,17 +1,14 @@
 import { dbUsers } from "../db/db.js";
+import { validateEmail, validatePassword } from "../utils/helpers.js";
+import {
+  MIN_NAME_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  MIN_RUT_LENGTH,
+  MIN_PHONE_LENGTH,
+  MAX_LOGIN_ATTEMPTS,
+  USER_LEVELS
+} from "../utils/constants.js";
 
-const MAX_LOGIN_ATTEMPTS = 3;
-const MIN_PASSWORD_LENGTH = 8;
-const MIN_NAME_LENGTH = 3;
-const MIN_PHONE_LENGTH = 9; // Fromato 912345678
-const MIN_RUT_LENGTH = 10; // Formato 12345678-k
-
-const USER_LEVELS = {
-  BRONCE: { name: "bronce", minPoints: 0 },
-  PLATA: { name: "plata", minPoints: 100 },
-  ORO: { name: "oro", minPoints: 200 },
-  PLATINO: { name: "platino", minPoints: 300 },
-};
 
 const calculateUserLevel = (points) => {
   if (points >= USER_LEVELS.PLATINO.minPoints) return USER_LEVELS.PLATINO.name;
@@ -45,10 +42,10 @@ const validateRegistrationData = (formData) => {
   if (!formData.nombre || formData.nombre.length < MIN_NAME_LENGTH)
     errors.push("Nombre inválido: mínimo 3 caracteres");
 
-  if (!formData.email || !formData.email.includes("@"))
+  if (!formData.email || !validateEmail(formData.email))
     errors.push("Email inválido");
 
-  if (!formData.pass || formData.pass.length < MIN_PASSWORD_LENGTH)
+  if (!formData.pass || !validatePassword(formData.pass))
     errors.push(
       `La contraseña debe tener mínimo ${MIN_PASSWORD_LENGTH} caracteres`,
     );

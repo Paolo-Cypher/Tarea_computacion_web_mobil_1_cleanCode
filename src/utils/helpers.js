@@ -4,6 +4,7 @@ import { MIN_RUT_LENGTH, MIN_PASSWORD_LENGTH } from "./constants.js";
 export const validateEmail = (email) =>
   typeof email === "string" && email.includes("@") && email.includes(".");
 
+
 export const validatePassword = (password) =>
   typeof password === "string" && password.length >= MIN_PASSWORD_LENGTH;
 
