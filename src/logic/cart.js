@@ -6,7 +6,7 @@
 // Autor: Benjamin Farías
 //=====================================================================
 
-import { dbProducts as produtos, dbUsers as users } from "../db/db.js";
+import { dbProducts as productos, dbUsers as users } from "../db/db.js";
 import { coupons } from "../db/coupons.js";
 
 //CONSTANTES
@@ -63,8 +63,7 @@ export const calcularPuntosGanados = (totalFinal) => Math.floor(totalFinal / VAL
 
 //Construye el detalle de productos param mostrar en la orden
 //Cada item incluye: Nombre, Precio Unitario, Cantidad y Subtotal (precio x cantidad)
-export const construirDetalleProductos = (carrito)
-    => carrito.map((item) => {
+export const construirDetalleProductos = (carrito) => carrito.map((item) => {
         const producto = productos.find((p) => p.id === item.productoId);
         return {
             prod: producto.nom,
@@ -108,7 +107,7 @@ export const aplicarCupon = (code, userId, carritoTotal) => {
 //Agregar producto al carrito
 //Usa Early returns para validar antes de agregar
 export const agregarAlCarrito = (userId, productoId, cantidad) => {
-    const producto = produtos.find((p) => p.id === productoId);
+    const producto = productos.find((p) => p.id === productoId);
     const usuario = users.find((u) => u.id === userId);
 
     //Validaciones con Early returns
@@ -148,7 +147,7 @@ export const validarMetodoPago = (metodoPago, datosPago) => {
 //Descuenta el stock de los productos comprados según las cantidades en el carrito
 export const actualizarStock = (carrito) => {
     carrito.forEach((item) => {
-        const producto = produtos.find((p) => p.id === item.productoId);
+        const producto = productos.find((p) => p.id === item.productoId);
         if (producto) producto.stock -= item.cantidad; //descuenta la cantidad comprada del stock
     });
 };
