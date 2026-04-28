@@ -1,9 +1,3 @@
-/**
- * CONSTANTES DEL SISTEMA
- * Centraliza todos los valores fijos del sistema de tienda online.
- * De esta forma se evitan los "números mágicos" dispersos en el código.
- */
-
 // Autenticación
 export const MAX_LOGIN_ATTEMPTS = 3;
 export const MIN_PASSWORD_LENGTH = 8;
