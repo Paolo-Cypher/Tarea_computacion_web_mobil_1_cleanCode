@@ -249,7 +249,7 @@ if(action == "buscarProductos"){
 
 
   // agregar al carrito
-  if (action == "addCart") {
+  /*if (action == "addCart") {
     var prodId = dat;
     var qty = extraDat;
     var userId2 = moreData;
@@ -425,7 +425,7 @@ if(action == "buscarProductos"){
     }
     return;
   }
-
+*/
   // obtener estadisticas
   if (action == "getStats") {
     var stats = {};
@@ -603,7 +603,7 @@ function notifyUser(channel, uid, message, payload) {
 }
 
 // manejo de cupones
-function cupon(code, userId, cartTotal, products) {
+/*function cupon(code, userId, cartTotal, products) {
   // lista de cupones hardcodeada
   var cupones = [
     { code: "DESC10", tipo: "porcentaje", valor: 10, minCompra: 50000, maxUsos: 100, usos: 45, activo: true, expira: "2024-12-31", categorias: [], usuarios: [] },
@@ -667,7 +667,7 @@ function cupon(code, userId, cartTotal, products) {
   found.usos++;
   return { ok: true, msg: "cupon aplicado", descuento: descuentoFinal, tipo: found.tipo };
 }
-
+*/
 // funcion para buscar (otro duplicado con diferente nombre)
 function search(q, filters) {
   var prods = [
