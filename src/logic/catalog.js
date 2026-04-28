@@ -3,11 +3,12 @@
  *  Este archivo centraliza la lógica de negocio para la gestión de productos.
  * Incluye funciones de filtrado avanzado y renderizado dinámico de componentes.
  * Autor: Paolo Sepúlveda
- * Fecha ultima actualización: 19/04/2026
+ * Fecha ultima actualización: 28/04/2026
  */
 
-import { fmtPrice } from "../../problema.js"; //la importe para ver como quedaba, pero puede que luego cambie el nombre de la funcion, si es asi, tengo que cambiarlo aqui tambien, ojo ahi
-
+function fmtPrice(n) {
+  return "$" + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
 
   //el extraDat y el moreData son para filtros adicionales, como categoria, precio minimo, precio maximo, etc. Vere como la cambio despues, pero por ahora lo dejo asi para avanzar con el resto de la logica, ojo ahi
 export const buscarProductos  = (dbProducts, textoBuscado, categoria, moreData) =>{ //funcion flecha, ok
