@@ -1,8 +1,3 @@
-// =====================================================
-// test/Cart.test.js
-// Módulo 4: Carrito y Ventas
-// Tests unitarios con Mocha + Chai
-// =====================================================
 
 import { expect } from "chai";
 import {
@@ -18,21 +13,15 @@ import {
   checkoutCompra,
 } from "../src/logic/cart.js";
 
-// =====================================================
-// SECCION 1: Funciones puras de calculo
-// =====================================================
 describe("Modulo 4 - Calculos de venta", () => {
 
-  // Test cálculo de subtotal con varios productos
-  // Nota: usa los nombres reales de propiedades (productoId, cantidad)
+  // Test calculo de subtotal con varios productos
   it("calcularSubtotal debe sumar precio por cantidad de cada item", () => {
     const carrito = [
       { productoId: 1, cantidad: 2 },
       { productoId: 2, cantidad: 1 },
     ];
     const total = calcularSubtotal(carrito);
-    // Si los IDs 1 y 2 existen en dbProducts, debería ser > 0
-    // Si no, el .find() los ignora y retorna 0 (revisar IDs reales en db.js)
     expect(total).to.be.a("number");
     expect(total).to.be.at.least(0);
   });
@@ -42,7 +31,7 @@ describe("Modulo 4 - Calculos de venta", () => {
     expect(calcularSubtotal([])).to.equal(0);
   });
 
-  // Test cálculo subtotal ignora productos que no existen
+  // Test calculo subtotal ignora productos que no existen
   it("calcularSubtotal debe ignorar productos inexistentes y retornar 0", () => {
     const carrito = [{ productoId: 99999, cantidad: 5 }];
     expect(calcularSubtotal(carrito)).to.equal(0);
@@ -75,12 +64,12 @@ describe("Modulo 4 - Calculos de venta", () => {
     expect(calcularDescuentoTotal(usuario)).to.equal(15);
   });
 
-  // Test cálculo de IVA
+  // Test calculo de IVA
   it("aplicarIVA debe aplicar 19% sobre el monto", () => {
     expect(aplicarIVA(100000)).to.equal(19000);
   });
 
-  // Test cálculo de IVA con monto cero
+  // Test calculo de IVA con monto cero
   it("aplicarIVA debe retornar 0 si el monto es 0", () => {
     expect(aplicarIVA(0)).to.equal(0);
   });
@@ -96,9 +85,7 @@ describe("Modulo 4 - Calculos de venta", () => {
   });
 });
 
-// =====================================================
-// SECCION 2: Validacion del metodo de pago
-// =====================================================
+
 describe("Modulo 4 - Validacion de metodo de pago", () => {
 
   // Test tarjeta válida (requiere numeroTargeta de 16, fechaExpiracion de 4 y cvv de 3)
@@ -111,7 +98,7 @@ describe("Modulo 4 - Validacion de metodo de pago", () => {
     expect(validarMetodoPago("tarjeta", datos)).to.equal(true);
   });
 
-  // Test tarjeta con número inválido
+  // Test tarjeta con numero invalido
   it("validarMetodoPago debe rechazar tarjeta con numero incompleto", () => {
     const datos = {
       numeroTargeta: "1234",
@@ -130,7 +117,7 @@ describe("Modulo 4 - Validacion de metodo de pago", () => {
     expect(validarMetodoPago("tarjeta", datos)).to.equal(false);
   });
 
-  // Test tarjeta con cvv inválido
+  // Test tarjeta con cvv invalido
   it("validarMetodoPago debe rechazar tarjeta con cvv invalido", () => {
     const datos = {
       numeroTargeta: "1234567890123456",
@@ -150,50 +137,45 @@ describe("Modulo 4 - Validacion de metodo de pago", () => {
     expect(validarMetodoPago("efectivo")).to.equal(true);
   });
 
-  // Test método inexistente
+  // Test metodo inexistente
   it("validarMetodoPago debe rechazar metodos de pago no soportados", () => {
     expect(validarMetodoPago("bitcoin")).to.equal(false);
   });
 });
 
-// =====================================================
-// SECCION 3: Cupones de descuento
-// =====================================================
+
 describe("Modulo 4 - Sistema de cupones", () => {
 
-  // Test cupón inexistente
+  // Test cupon inexistente
   it("aplicarCupon debe rechazar un cupon que no existe", () => {
     const resultado = aplicarCupon("NOEXISTE", 1, 100000);
     expect(resultado.ok).to.equal(false);
     expect(resultado.descuento).to.equal(0);
   });
 
-  // Test monto mínimo no alcanzado
+  // Test monto minimo no alcanzado
   it("aplicarCupon debe rechazar si el monto minimo no se alcanza", () => {
     const resultado = aplicarCupon("DESC10", 1, 1000);
     expect(resultado.ok).to.equal(false);
   });
 
-  // Test cupón agotado (DESC20 tiene usos:50 y maxUsos:50)
+  // Test cupon agotado (DESC20 tiene usos:50 y maxUsos:50)
   it("aplicarCupon debe rechazar un cupon agotado", () => {
     const resultado = aplicarCupon("DESC20", 1, 200000);
     expect(resultado.ok).to.equal(false);
   });
 
-  // Test cupón restringido a usuarios específicos (VIP2024 solo permite [1,3,5])
+  // Test cupon restringido a usuarios especificos (VIP2024 solo permite [1,3,5])
   it("aplicarCupon debe rechazar si el usuario no esta autorizado", () => {
     const resultado = aplicarCupon("VIP2024", 99, 300000);
     expect(resultado.ok).to.equal(false);
   });
 });
 
-// =====================================================
-// SECCION 4: Operaciones del carrito
-// =====================================================
+
 describe("Modulo 4 - Operaciones del carrito", () => {
 
   // Test agregar producto inexistente
-  // Nota: el mensaje empieza con mayuscula en cart.js
   it("agregarAlCarrito debe rechazar un producto que no existe", () => {
     const resultado = agregarAlCarrito(1, 99999, 1);
     expect(resultado.ok).to.equal(false);
@@ -207,7 +189,6 @@ describe("Modulo 4 - Operaciones del carrito", () => {
   });
 
   // Test vaciar carrito - usuario inexistente
-  // Nota: vaciarCarrito recibe userId, no el objeto usuario
   it("vaciarCarrito debe rechazar si el usuario no existe", () => {
     const resultado = vaciarCarrito(9999);
     expect(resultado.ok).to.equal(false);
@@ -222,9 +203,6 @@ describe("Modulo 4 - Operaciones del carrito", () => {
   });
 });
 
-// =====================================================
-// SECCION 5: Proceso de checkout
-// =====================================================
 describe("Modulo 4 - Checkout", () => {
 
   // Test checkout sin usuario
@@ -233,7 +211,7 @@ describe("Modulo 4 - Checkout", () => {
     expect(resultado.ok).to.equal(false);
   });
 
-  // Test checkout con datos de tarjeta inválidos
+  // Test checkout con datos de tarjeta invalidos
   it("checkoutCompra debe rechazar si los datos de tarjeta son invalidos", () => {
     const resultado = checkoutCompra(
       1,
