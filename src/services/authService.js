@@ -1,5 +1,6 @@
 import { dbUsers } from "../db/db.js";
 import { validateEmail, validatePassword } from "../utils/helpers.js";
+import { sendNotif } from "../utils/DevOps/Notifications.js";
 import {
   MIN_NAME_LENGTH,
   MIN_PASSWORD_LENGTH,
@@ -10,6 +11,7 @@ import {
 } from "../utils/constants.js";
 
 
+// Asignacion de tier para el usuario segfun puntos acumulados
 const calculateUserLevel = (points) => {
   if (points >= USER_LEVELS.PLATINO.minPoints) return USER_LEVELS.PLATINO.name;
   if (points >= USER_LEVELS.ORO.minPoints) return USER_LEVELS.ORO.name;
@@ -18,11 +20,13 @@ const calculateUserLevel = (points) => {
 };
 
 const generateToken = () =>
-  `tkn_${Math.random().toString(36).substring(2, 11)}`;
+  `tkn_${Math.random().toString(36).substring(2, 11)}`; // Uso de la libreria math para generar numero random
 
 const createSession = (user) => ({
   user: {
+    // Se copian los datos ya existentes
     ...user,
+    // Se actualizan segun el ultimo login
     nivel: calculateUserLevel(user.puntos),
     ultimoLogin: new Date().toISOString(),
   },
@@ -37,6 +41,9 @@ const registerFailedAttempt = (user) => {
 };
 
 const validateRegistrationData = (formData) => {
+
+  // A medida que ocurre un error en el rellenado del formulario
+  // se agrega a un listado para mostrar cada error cometido
   const errors = [];
 
   if (!formData.nombre || formData.nombre.length < MIN_NAME_LENGTH)
@@ -62,13 +69,11 @@ const validateRegistrationData = (formData) => {
   return errors;
 };
 
-const sendEmail = (email, nombre) => {
-  console.log(`Enviando email de bienvenida a ${email}`);
-};
-
+  // Logica para revisar si el correo existe
 const isEmailAlreadyRegistered = (email) =>
   dbUsers.some((user) => user.email === email);
 
+  // Formato de guardado de usuario
 const saveUser = (formData) => ({
   id: Math.floor(Math.random() * 9000) + 1000,
   nombre: formData.nombre,
@@ -92,6 +97,8 @@ const saveUser = (formData) => ({
   updatedAt: new Date().toISOString(),
 });
 
+  // Logica para verificcacion del usuario al momento
+  // de logearse
 const login = (email, password, callback) => {
   const user = dbUsers.find((u) => u.email === email);
   const isPasswordCorrect = user?.pass === password;
@@ -115,6 +122,7 @@ const login = (email, password, callback) => {
   callback({ ok: true, msg: "Login exitoso", data: createSession(user) });
 };
 
+  // Logica para validacion de fr=ormulario de registro
 const register = (formData, callback) => {
   const errors = validateRegistrationData(formData);
   if (errors.length > 0) {
@@ -133,7 +141,9 @@ const register = (formData, callback) => {
 
   const newUser = saveUser(formData);
   dbUsers.push(newUser);
-  sendEmail(formData.email, formData.name);
+
+  // Envio de Email
+  sendNotif("email", formData.id, `Bienvenido ${formData.nombre}`, formData);
 
   callback({ ok: true, msg: "Registro exitoso", data: createSession(newUser) });
 };
