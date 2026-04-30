@@ -9,11 +9,12 @@ export const MIN_RUT_LENGTH = 10;
 export const IVA_RATE = 0.19;
 
 // Niveles de usuario según puntos acumulados
+//Debe ir de mayor a menor para que funcione bien el .find() devuelva el primer match
 export const USER_LEVELS = {
-  BRONCE:  { name: "bronce",  minPoints: 0,   discountPct: 0  },
-  PLATA:   { name: "plata",   minPoints: 100,  discountPct: 5  },
-  ORO:     { name: "oro",     minPoints: 200,  discountPct: 10 },
   PLATINO: { name: "platino", minPoints: 300,  discountPct: 15 },
+  ORO:     { name: "oro",     minPoints: 200,  discountPct: 10 },
+  PLATA:   { name: "plata",   minPoints: 100,  discountPct: 5  },
+  BRONCE:  { name: "bronce",  minPoints: 0,   discountPct: 0  }
 };
 
 // Puntos de fidelidad
