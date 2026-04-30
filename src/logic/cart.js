@@ -8,21 +8,7 @@
 
 import { dbProducts as productos, dbUsers as users } from "../db/db.js";
 import { coupons } from "../db/coupons.js";
-
-//CONSTANTES
-const IVA = 0.19; //19% de IVA
-
-//Valore de 1 punto por cada peso gastado
-const VALOR_PUNTOS = 1000; //1 punto vale 1000 pesos
-
-//TABLA DE NIVELES DE DESCUENTOS POR PUNTOS
-//Debe ir de mayor a menor para que funcione bien el .find() devuelva el primer match
-const NIVELES_DESCUENTO = [
-    { minPoints: 300, discount: 15 }, //platino: 15% de descuento para 300 o más puntos
-    { minPoints: 200, discount: 10 }, //oro: 10% de descuento para 200 o más puntos
-    { minPoints: 100, discount: 5 },  //plata: 5% de descuento para 100 o más puntos
-    { minPoints: 0, discount: 0 }     //bronce: sin descuento para menos de 100 puntos
-];
+import { USER_LEVELS, IVA_RATE, POINTS_PER_PESO } from "../utils/constants.js";
 
 //VALIDACIONES POR METODO DE PAGO
 const METODOS_PAGO = {
@@ -45,8 +31,8 @@ export const calcularSubtotal = (carrito) =>
 
 //Devuelve el % de descuento segun los puntos de usuario
 export const obtenerDescuentoPorPuntos = (puntos) => {
-    const nivel = NIVELES_DESCUENTO.find((nivel) => puntos >= nivel.minPoints);
-    return nivel ? nivel.discount : 0;
+    const nivel = Object.values(USER_LEVELS).find((n) => puntos >= n.minPoints);
+    return nivel ? nivel.discountPct : 0;
 };
 
 
@@ -56,10 +42,10 @@ export const calcularDescuentoTotal = (usuario) =>
     obtenerDescuentoPorPuntos(usuario.puntos) + usuario.descuento;
 
 //Aplica el IVA
-export const aplicarIVA = (monto) => monto * IVA;
+export const aplicarIVA = (monto) => monto * IVA_RATE;
 
 //CALCULA LOS PUNTOS QUE GANA EL USUARIO POR LA COMPRA (1 punto cada 1000 pesos gastados)
-export const calcularPuntosGanados = (totalFinal) => Math.floor(totalFinal / VALOR_PUNTOS);
+export const calcularPuntosGanados = (totalFinal) => Math.floor(totalFinal / POINTS_PER_PESO);
 
 //Construye el detalle de productos param mostrar en la orden
 //Cada item incluye: Nombre, Precio Unitario, Cantidad y Subtotal (precio x cantidad)
@@ -113,6 +99,7 @@ export const agregarAlCarrito = (userId, productoId, cantidad) => {
     //Validaciones con Early returns
     if (!producto) return { ok: false, msg: "Producto no encontrado", data: null };
     if (!producto.activo) return { ok: false, msg: "Producto no disponible", data: null };
+    if (producto.stock <= STOCK_THRESHOLDS.AGOTADO) return { ok: false, msg: "Producto agotado", data: null };
     if (producto.stock < cantidad) return { ok: false, msg: "Stock insuficiente", data: null };
     if (!usuario) return { ok: false, msg: "Usuario no encontrado", data: null };
 
